@@ -1,0 +1,5 @@
+select C.name,M.decaden, M.year, P.mortality_rate_infant
+from fact_table as F, month as M, country as C, population as P
+where F.month_key = M.month_key and F.country_key = C.country_key and F.population_key = P.population_key
+group by (C.Name,M.decaden, M.year,P.mortality_rate_infant)
+order by M.year,M.decaden, C.Name

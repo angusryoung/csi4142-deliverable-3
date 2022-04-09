@@ -1,0 +1,5 @@
+select C.name, M.year, M.quarter, M.month
+from fact_table as F, month as M, country as C
+where F.month_key = M.month_key and F.country_key = C.country_key
+group by C.Name,rollup(M.year,M.quarter,M.month)
+order by C.Name, M.year, M.quarter, M.month

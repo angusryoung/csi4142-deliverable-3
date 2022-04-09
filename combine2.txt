@@ -1,0 +1,7 @@
+select  C.Name,M.year,M.quarter,M.month, sum(EV.total_deaths),C.death_rate
+from fact_table as F, month as M, event as EV, country as C
+where F.month_key = M.month_key and F.country_key = C.country_key and F.event_key = EV.event_key
+group by (C.Name,C.death_rate, M.year,M.quarter,M.month)
+order by C.Name,C.death_rate,M.year,M.quarter,M.month
+
+

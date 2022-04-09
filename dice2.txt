@@ -1,0 +1,5 @@
+select C.name,M.year, Q.unemployment_total
+from fact_table as F, country as C, month as M, quality_of_life as Q
+where F.country_key = C.country_key and F.month_key=M.month_key and F.qol_key = Q.qol_key and C.name in ('Canada','United States') and M.year = '2009'
+group by C.Name,M.year, Q.unemployment_total
+order by C.Name,m.year,Q.unemployment_total
