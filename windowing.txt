@@ -1,0 +1,20 @@
+select t2.Name,t2.year,t2.quarter,t2.month,t2.deaths, t1.average, t2.yearly_death_rank
+from (
+	select C.Name,M.year,M.quarter,M.month,sum(EV.total_deaths) as deaths, Rank()OVER( PARTITION BY M.year,C.name order by sum(ev.total_deaths) desc) as yearly_death_rank
+	from fact_table as F, month as M, event as EV, country as C
+	where F.month_key = M.month_key and F.country_key = C.country_key and F.event_key = EV.event_key 
+	group by (C.Name, M.year,M.quarter,M.month)
+	order by C.Name,M.year,M.quarter,M.month)as t2, 
+	(
+	select C.Name,M.year,M.month, ev.total_deaths, avg(EV.total_deaths)OVER(PARTITION BY M.year) as average
+	from fact_table as F, month as M, event as EV, country as C
+	where F.month_key = M.month_key and F.country_key = C.country_key and F.event_key = EV.event_key
+	group by (C.Name,ev.total_deaths, M.year,M.month)
+	order by C.Name,M.year,M.month
+) as t1
+where t1.year = t2.year and t1.name = t2.name and t2.month = t1.month 
+group by (t2.Name,t2.deaths,t1.average, t2.year,t2.quarter,t2.month,t2.yearly_death_rank)
+order by t2.Name,t2.year,t2.quarter,t2.month
+
+
+

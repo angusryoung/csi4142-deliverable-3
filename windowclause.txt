@@ -1,0 +1,9 @@
+select t1.Name,t1.year,t1.deaths, avg(t1.deaths) over W
+from (select C.Name,M.year,sum(EV.total_deaths) as deaths
+	from fact_table as F, month as M, event as EV, country as C
+	where F.month_key = M.month_key and F.country_key = C.country_key and F.event_key = EV.event_key 
+	group by (C.Name, M.year)
+	order by C.Name,M.year) as t1
+window W as (partition by t1.name
+			 rows between 1 preceding and 1 following)
+
